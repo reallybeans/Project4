@@ -1,14 +1,12 @@
 name: Backend Continuous Deployment
 
 on:
-  # This allows running on-demand
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      # This will only run on changes to the backend code
-      - 'backend/**'
+      - 'starter/backend/**'
 
 env:
   PYTHON_VERSION: 3.11
@@ -19,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./starter/backend
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -54,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./starter/backend
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -82,7 +80,7 @@ jobs:
     needs: [lint, test]
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./starter/backend
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -105,6 +103,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
 
       - name: Login to Amazon ECR
@@ -147,6 +146,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
           
       - name: Login to Amazon ECR
